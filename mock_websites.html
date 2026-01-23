@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fake Content Detection - Grid Test</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f0f2f5; 
+            padding: 20px; 
+            margin: 0;
+        }
+
+        h1 { 
+            text-align: center; 
+            color: #1c1e21; 
+            margin-bottom: 30px;
+        }
+
+        /* 2-Column Grid Layout */
+        .feed-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-header {
+            padding: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Fixed height for uniformity */
+        .post-image {
+            width: 100%;
+            height: 250px; 
+            object-fit: cover;
+            display: block;
+        }
+
+        .post-content {
+            padding: 15px;
+            flex-grow: 1; /* Pushes content to fill space */
+        }
+
+        .caption {
+            font-size: 15px;
+            color: #1c1e21;
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+        }
+
+        .hashtags {
+            color: #1877f2;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .meta {
+            color: #65676b;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* Label for testing visibility */
+        .test-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 3px 6px;
+            border-radius: 4px;
+            float: right;
+            color: white;
+        }
+        .label-safe { background-color: #4CAF50; }
+        .label-fake { background-color: #f44336; }
+
+        @media (max-width: 600px) {
+            .feed-grid { grid-template-columns: 1fr; } /* Stack on mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🛡️ Global Fake Content Detection Feed</h1>
+    
+    <div class="feed-grid">
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #a5d6a7;"></div> 
+                Sarah Jenkins
+            </div>
+            <img src="profile.png" class="post-image" alt="Nature">
+            <div class="post-content">
+                <p class="caption">this is  y fav pic</p>
+                <span class="hashtags">#picture #photo #fav</span>
+                <div class="meta">2 hrs ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #ef9a9a;"></div> 
+                Crypto Master
+                
+            </div>
+            <img src="https://picsum.photos/id/1060/500/300" class="post-image" alt="Money">
+            <div class="post-content">
+                <p class="caption">Double your money in 24 hours! 100% Guaranteed returns. DM me now.</p>
+                <span class="hashtags">#bitcoin #scam #fastcash #money</span>
+                <div class="meta">Just now</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #ffe082;"></div> 
+                Chef Mike
+                
+            </div>
+            <img src="https://picsum.photos/id/1080/500/300" class="post-image" alt="Food">
+            <div class="post-content">
+                <p class="caption">Homemade strawberries and cream. Perfect for summer!</p>
+                <span class="hashtags">#foodie #dessert #summer</span>
+                <div class="meta">15 mins ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #ce93d8;"></div> 
+                Viral Buzz
+          
+            </div>
+            <img src="https://picsum.photos/id/1025/500/300" class="post-image" alt="Shock">
+            <div class="post-content">
+                <p class="caption">You won't believe what happened next! This secret will shock you.</p>
+                <span class="hashtags">#shocking #clickbait #viral</span>
+                <div class="meta">30 mins ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #90caf9;"></div> 
+                Tech Daily
+
+            </div>
+            <img src="https://picsum.photos/id/1/500/300" class="post-image" alt="Tech">
+            <div class="post-content">
+                <p class="caption">Working on some new code for the open source project. Python is great.</p>
+                <span class="hashtags">#coding #python #developer</span>
+                <div class="meta">1 hr ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #b0bec5;"></div> 
+                Dark Net
+              
+            </div>
+            <img src="https://picsum.photos/id/1050/500/300" class="post-image" alt="Dark">
+            <div class="post-content">
+                <p class="caption">Footage of the street fight. Real violence uncensored.</p>
+                <span class="hashtags">#fight #violence #illegal</span>
+                <div class="meta">3 hrs ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #80cbc4;"></div> 
+                Travel Bug
+    
+            </div>
+            <img src="https://picsum.photos/id/1036/500/300" class="post-image" alt="Travel">
+            <div class="post-content">
+                <p class="caption">The architecture in this city is absolutely stunning.</p>
+                <span class="hashtags">#travel #architecture #city</span>
+                <div class="meta">5 hrs ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #f48fb1;"></div> 
+                Lucky Winner
+
+            </div>
+            <img src="https://picsum.photos/id/1055/500/300" class="post-image" alt="Prize">
+            <div class="post-content">
+                <p class="caption">CONGRATULATIONS! You are the lucky winner of an iPhone. Click to claim.</p>
+                <span class="hashtags">#lottery #winner #scam</span>
+                <div class="meta">6 hrs ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #ffcc80;"></div> 
+                Dog Lover
+
+            </div>
+            <img src="https://picsum.photos/id/1020/500/300" class="post-image" alt="Dog">
+            <div class="post-content">
+                <p class="caption">My dog sleeping is the cutest thing ever.</p>
+                <span class="hashtags">#dog #puppy #cute</span>
+                <div class="meta">8 hrs ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header">
+                <div class="user-avatar" style="background: #9e9e9e;"></div> 
+                Anon Seller
+
+            </div>
+            <img src="mass.jpg" class="post-image" alt="Restricted">
+            <div class="post-content">
+                <p class="caption">the photo reminds me my memories</p>
+                <span class="hashtags">#mine #fav #picture</span>
+                <div class="meta">12 hrs ago</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

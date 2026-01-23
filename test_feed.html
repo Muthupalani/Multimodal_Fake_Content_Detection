@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fake Content Detection - Local Test</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 20px; }
+        h1 { text-align: center; color: #1877f2; }
+        
+        .feed-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .post {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            overflow: hidden;
+            padding-bottom: 10px;
+        }
+
+        .user-header {
+            padding: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* This is the image the extension will scan */
+        .post-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .post-content {
+            padding: 10px 15px;
+        }
+
+        .caption {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .hashtags {
+            color: #1877f2;
+            font-size: 14px;
+        }
+        
+        .meta {
+            color: #65676b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Global Fake-Content Detection Feed</h1>
+    <div class="feed-container">
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>John Doe</div>
+            <img src="sunday.jpg" class="post-image" alt="Post 1">
+            <div class="post-content">
+                <p class="caption">Enjoying the beautiful sunset at the beach today! So relaxing.</p>
+                <span class="hashtags">#nature #sunset #peace</span>
+                <div class="meta">Just now</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Crypto King</div>
+            <img src="profile.png" class="post-image" alt="Post 2">
+            <div class="post-content">
+                <p class="caption">That pic was one of my fav pic</p>
+                <span class="hashtags">#photo #pic #fav</span>
+                <div class="meta">2 mins ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Jane Smith</div>
+            <img src="mass.jpg" class="post-image" alt="Post 3">
+            <div class="post-content">
+                <p class="caption">Made some homemade pasta today. Tastes amazing!</p>
+                <span class="hashtags">#cooking #foodie #pasta</span>
+                <div class="meta">15 mins ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Viral News</div>
+            <img src="https://picsum.photos/600/300?random=4" class="post-image" alt="Post 4">
+            <div class="post-content">
+                <p class="caption">You won't believe what this celebrity did! Shocking!</p>
+                <span class="hashtags">#shocking #clickbait #news</span>
+                <div class="meta">30 mins ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Tech Daily</div>
+            <img src="https://picsum.photos/600/300?random=5" class="post-image" alt="Post 5">
+            <div class="post-content">
+                <p class="caption">New laptop review coming soon. Stay tuned for specs.</p>
+                <span class="hashtags">#tech #laptop #review</span>
+                <div class="meta">1 hour ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Angry Bot</div>
+            <img src="https://picsum.photos/600/300?random=6" class="post-image" alt="Post 6">
+            <div class="post-content">
+                <p class="caption">This is how we fight. Destruction everywhere.</p>
+                <span class="hashtags">#fight #violence #anger</span>
+                <div class="meta">2 hours ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Travel Vibes</div>
+            <img src="https://picsum.photos/600/300?random=7" class="post-image" alt="Post 7">
+            <div class="post-content">
+                <p class="caption">Paris is looking lovely this time of year.</p>
+                <span class="hashtags">#travel #paris #love</span>
+                <div class="meta">3 hours ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Dark Web</div>
+            <img src="https://picsum.photos/600/300?random=8" class="post-image" alt="Post 8">
+            <div class="post-content">
+                <p class="caption">Get access to restricted items here. No questions asked.</p>
+                <span class="hashtags">#restricted #illegal #buy</span>
+                <div class="meta">4 hours ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Pet Lover</div>
+            <img src="https://picsum.photos/600/300?random=9" class="post-image" alt="Post 9">
+            <div class="post-content">
+                <p class="caption">Look at my cute dog sleeping!</p>
+                <span class="hashtags">#dog #cute #puppy</span>
+                <div class="meta">5 hours ago</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="user-header"><div class="user-avatar"></div>Lottery Winner</div>
+            <img src="https://picsum.photos/600/300?random=10" class="post-image" alt="Post 10">
+            <div class="post-content">
+                <p class="caption">Congratulations! You won $1,000,000. Click to claim.</p>
+                <span class="hashtags">#lottery #scam #winner</span>
+                <div class="meta">6 hours ago</div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

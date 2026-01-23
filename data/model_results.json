@@ -1,0 +1,123 @@
+[
+    {
+        "image_url": "https://picsum.photos/id/1020/500/300",
+        "image_score": 0.35,
+        "image_result": "fake",
+        "caption": "Dog Lover\n\nMy dog sleeping is the cutest thing ever.\n\n#dog #puppy #cute\n8 hrs ago",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#dog",
+            "#puppy",
+            "#cute"
+        ],
+        "hashtag_score": 0.95,
+        "hashatag_results": "related",
+        "final_verdict": "BLUR"
+    }
+]n",
+        "final_verdict": "BLUR"
+    }
+]",
+        "final_verdict": "VISIBLE"
+    }
+]
+    }
+]um.photos/id/1050/500/300",
+        "image_score": 0.26,
+        "image_result": "fake",
+        "caption": "Dark Net\nEXPECTED: BLUR\n\nFootage of the street fight. Real violence uncensored.\n\n#fight #violence #illegal\n3 hrs ago",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#fight",
+            "#violence",
+            "#illegal"
+        ],
+        "hashtag_score": 0.1,
+        "hashatag_results": "violation",
+        "final_verdict": "BLUR"
+    },
+    {
+        "image_url": "https://picsum.photos/id/1060/500/300",
+        "image_score": 0.16,
+        "image_result": "fake",
+        "caption": "Crypto Master\nEXPECTED: BLUR\n\nDouble your money in 24 hours! 100% Guaranteed returns. DM me now.\n\n#bitcoin #scam #fastcash #money\nJust now",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#bitcoin",
+            "#scam",
+            "#fastcash",
+            "#money"
+        ],
+        "hashtag_score": 0.1,
+        "hashatag_results": "violation",
+        "final_verdict": "BLUR"
+    },
+    {
+        "image_url": "https://picsum.photos/id/1015/500/300",
+        "image_score": 0.16,
+        "image_result": "fake",
+        "caption": "Sarah Jenkins\nEXPECTED: VISIBLE\n\nThe hiking trail was breathtaking today. Nothing beats fresh air.\n\n#hiking #nature #outdoors\n2 hrs ago",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#hiking",
+            "#nature",
+            "#outdoors"
+        ],
+        "hashtag_score": 0.95,
+        "hashatag_results": "related",
+        "final_verdict": "BLUR"
+    },
+    {
+        "image_url": "https://picsum.photos/id/1/500/300",
+        "image_score": 0.23,
+        "image_result": "fake",
+        "caption": "Tech Daily\nEXPECTED: VISIBLE\n\nWorking on some new code for the open source project. Python is great.\n\n#coding #python #developer\n1 hr ago",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#coding",
+            "#python",
+            "#developer"
+        ],
+        "hashtag_score": 0.95,
+        "hashatag_results": "related",
+        "final_verdict": "BLUR"
+    },
+    {
+        "image_url": "https://picsum.photos/id/1055/500/300",
+        "image_score": 0.26,
+        "image_result": "fake",
+        "caption": "Lucky Winner\nEXPECTED: BLUR\n\nCONGRATULATIONS! You are the lucky winner of an iPhone. Click to claim.\n\n#lottery #winner #scam\n6 hrs ago",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#lottery",
+            "#winner",
+            "#scam"
+        ],
+        "hashtag_score": 0.1,
+        "hashatag_results": "violation",
+        "final_verdict": "BLUR"
+    },
+    {
+        "image_url": "https://picsum.photos/id/1016/500/300",
+        "image_score": 0.24,
+        "image_result": "fake",
+        "caption": "Anon Seller\nEXPECTED: BLUR\n\nBuy restricted items here without ID. Fast shipping.\n\n#restricted #illegal #buy\n12 hrs ago",
+        "caption_score": 1.0,
+        "caption_results": "fact",
+        "hastag": [
+            "#restricted",
+            "#illegal",
+            "#buy"
+        ],
+        "hashtag_score": 0.1,
+        "hashatag_results": "violation",
+        "final_verdict": "BLUR"
+    }
+] }
+]
