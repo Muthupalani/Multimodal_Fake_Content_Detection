@@ -1,96 +1,65 @@
-console.log("🛡️ Fake Content Detector Script Loaded");
+let autoScanEnabled = false;
+const BACKEND_URL = 'http://localhost:8000/analyze';  // Change via storage
 
-// 1. Listen for Manual Scan Trigger
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "scan_page") {
-        scanPage();
+// Social selectors (Instagram/X 2026 compatible)
+function extractPostData() {
+  const posts = [];
+  // Instagram post selectors
+  const igPosts = document.querySelectorAll('article a[href*="/p/"], div[role="button"]');
+  igPosts.forEach(post => {
+    const img = post.querySelector('img');
+    const captionEl = post.closest('article')?.querySelector('h1, span[dir="auto"]');
+    const htEl = captionEl?.nextElementSibling?.textContent?.match(/#\w+/g) || [];
+    if (img?.src && captionEl?.textContent) {
+      posts.push({
+        image_url: img.src,
+        caption: captionEl.textContent.trim().slice(0, 512),
+        hashtags: htEl
+      });
     }
-});
-
-// Optional: Auto-scan when page loads
-window.addEventListener('load', scanPage);
-
-async function scanPage() {
-    console.log("🔍 Scanning page for content...");
-
-    // Generic selector: Grabs all images on the page
-    // In a real app, you would target specific post containers (e.g., 'article' tags)
-    const images = document.querySelectorAll('img');
-
-    images.forEach((img, index) => {
-        // Skip small icons or invisible images
-        if (img.width < 100 || img.height < 100) return;
-
-        // Extract Data
-        const imageUrl = img.src;
-        
-        // Try to find the nearest caption (text in the parent container)
-        // This is a rough approximation for demo purposes
-        const container = img.parentElement; 
-        const captionText = container ? container.innerText : "";
-        
-        // Extract Hashtags (simple regex)
-        const hashtags = captionText.match(/#[a-z0-9_]+/gi) || [];
-
-        console.log(`Analyzing Image ${index}:`, imageUrl);
-
-        // Prepare Payload
-        const payload = {
-            image_url: imageUrl,
-            caption: captionText,
-            hashtags: hashtags
-        };
-
-        // 2. Send to Backend API
-        fetch('http://127.0.0.1:5000/analyze', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ Analysis Result:", data);
-            
-            // 3. Apply Decision
-            if (data.final_decision === "BLUR") {
-                applyBlur(img, data);
-            }
-        })
-        .catch(error => console.error("API Error:", error));
-    });
+  });
+  // X selectors (adapt similar)
+  const xPosts = document.querySelectorAll('[data-testid="tweet"] img');
+  // ... similar extraction
+  return posts;
 }
 
-function applyBlur(imgElement, data) {
-    // 1. Apply Blur Class
-    imgElement.classList.add('fake-content-blur');
-
-    // 2. Create Warning Overlay
-    const warning = document.createElement('div');
-    warning.className = 'fake-content-warning';
+async function analyzeAndAct(postData) {
+  try {
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(postData)
+    });
+    const { actions, final_score } = await res.json();
     
-    // Customize message based on what failed
-    let reasons = [];
-    if (data.image_analysis.result !== 'fact') reasons.push("Fake Image");
-    if (data.caption_analysis.result !== 'fact') reasons.push("Fake Caption");
-    if (data.hashtag_analysis.result !== 'related') reasons.push("Bad Hashtags");
-
-    warning.innerHTML = `
-        ⚠️ <strong>CONTENT WARNING</strong> ⚠️<br>
-        ${reasons.join(" + ")}<br>
-        <small>Click to Reveal</small>
-    `;
-
-    // 3. Add overlay to the parent
-    if (imgElement.parentElement) {
-        imgElement.parentElement.style.position = "relative"; // Ensure absolute positioning works
-        imgElement.parentElement.appendChild(warning);
+    // Modify DOM
+    if (actions.blur_image) postData.image.style.filter = 'blur(10px)';
+    if (actions.hide_caption) postData.captionEl.style.display = 'none';
+    if (actions.hide_hashtags) postData.htEl.forEach(el => el.style.textDecoration = 'line-through');
+    if (actions.blur_post) {
+      const postContainer = postData.post.closest('article, [data-testid="tweet"]');
+      postContainer.style.filter = 'blur(5px)';
     }
-
-    // 4. Click to Reveal Logic
-    warning.addEventListener('click', () => {
-        imgElement.classList.remove('fake-content-blur');
-        warning.remove();
-    });
+  } catch (e) { console.error('Analysis failed:', e); }
 }
+
+// MutationObserver for dynamic content
+const observer = new MutationObserver(debounce(extractPostData, 1000).then(posts => {
+  if (autoScanEnabled && posts.length) posts.forEach(analyzeAndAct);
+}));
+observer.observe(document.body, { childList: true, subtree: true });
+
+// Utils
+function debounce(fn, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// Listen for enable message from popup
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.enabled !== undefined) autoScanEnabled = msg.enabled;
+});
