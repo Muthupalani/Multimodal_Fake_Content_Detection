@@ -42,9 +42,9 @@ class AnalyzeRequest(BaseModel):
     hashtags: List[str]
 
 class AnalyzeResponse(BaseModel):
-    image_score: float  # 0-1 real, <0.7 fake
-    caption_score: float  # 0-1 real, <0.65 fake
-    hashtag_score: float  # 0-1 relevant, <0.6 fake
+    image_score: float  # 0-1 real <0.7 fake
+    caption_score: float  # 0-1 real <0.65 fake
+    hashtag_score: float  # 0-1 relevant <0.6 fake
     final_score: float  # Weighted <0.65 blur all
     actions: dict
 
