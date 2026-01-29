@@ -11,7 +11,7 @@ nlp_pipeline = pipeline(
     framework="pt"
 )
 
-# --- DEMO OVERRIDE RULES ---
+
 # If any of these words appear, we FORCE the result to be FAKE.
 # This guarantees your demo works perfectly when you edit HTML.
 DEMO_FAKE_TRIGGERS = [
@@ -43,7 +43,6 @@ def analyze_caption(caption_text):
         if "FAKE" in label.upper() or label == "LABEL_0":
             final_result = "fake"
         
-        # If AI confidence is low, lean towards fake for safety
         if score < 0.6:
             final_result = "fake"
 
