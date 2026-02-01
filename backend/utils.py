@@ -11,6 +11,7 @@ def ensure_data_dir():
     for f_path in [FILE_1, FILE_2]:
         if not os.path.exists(f_path):
             with open(f_path, 'w') as f: json.dump([], f)
+
 def save_extracted_data(post_id, image_url, caption, hashtags):
     ensure_data_dir()
     entry = {
@@ -23,6 +24,7 @@ def save_extracted_data(post_id, image_url, caption, hashtags):
     _append_to_json(FILE_1, entry)
 def save_model_scores(image_url, img_score, img_res, caption, cap_score, cap_res, 
                       hashtags, hash_score, hash_res, final_res):
+    
     ensure_data_dir()
     entry = {
         "image_url": image_url,
@@ -36,6 +38,7 @@ def save_model_scores(image_url, img_score, img_res, caption, cap_score, cap_res
         "hashatag_results": hash_res,
         "final_verdict": final_res
     }
+    
     _append_to_json(FILE_2, entry)
 def _append_to_json(filepath, new_data):
     try:
