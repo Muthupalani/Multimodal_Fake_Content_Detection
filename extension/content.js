@@ -1,6 +1,6 @@
 let autoScanEnabled = false;
-const BACKEND_URL = 'http://localhost:8000/analyze';  // Change via storage
-// Social selectors (Instagram/X 2026 compatible)
+const BACKEND_URL = 'http://localhost:8000/analyze';  
+
 function extractPostData() {
   const posts = [];
   // Instagram post selectors
@@ -17,9 +17,9 @@ function extractPostData() {
       });
     }
   });
-  // X selectors (adapt similar)
+  
   const xPosts = document.querySelectorAll('[data-testid="tweet"] img');
-  // ... similar extraction
+ 
   return posts;
 }
 async function analyzeAndAct(postData) {
@@ -30,7 +30,7 @@ async function analyzeAndAct(postData) {
       body: JSON.stringify(postData)
     });
     const { actions, final_score } = await res.json();
-    // Modify DOM
+    
     if (actions.blur_image) postData.image.style.filter = 'blur(10px)';
     if (actions.hide_caption) postData.captionEl.style.display = 'none';
     if (actions.hide_hashtags) postData.htEl.forEach(el => el.style.textDecoration = 'line-through');
@@ -40,12 +40,12 @@ async function analyzeAndAct(postData) {
     }
   } catch (e) { console.error('Analysis failed:', e); }
 }
-// MutationObserver for dynamic content
+
 const observer = new MutationObserver(debounce(extractPostData, 1000).then(posts => {
   if (autoScanEnabled && posts.length) posts.forEach(analyzeAndAct);
 }));
 observer.observe(document.body, { childList: true, subtree: true });
-// Utils
+
 function debounce(fn, delay) {
   let timeout;
   return (...args) => {
@@ -53,7 +53,7 @@ function debounce(fn, delay) {
     timeout = setTimeout(() => fn(...args), delay);
   };
 }
-// Listen for enable message from popup
+
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.enabled !== undefined) autoScanEnabled = msg.enabled;
 });
