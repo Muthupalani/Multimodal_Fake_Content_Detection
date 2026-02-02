@@ -72,11 +72,9 @@ async def analyze_post(request: AnalyzeRequest):
                 img_emb_clip = clip_model_st.get_image_features(image_input)
                 img_sim = img_emb_clip @ ht_emb_clip.T
                 img_sim = img_sim.softmax(dim=1).cpu().numpy()[0][0]
-            
             hashtag_score = (text_sim + img_sim) / 2
         else:
             hashtag_score = 1.0
-
         # Weighted final + actions
         final_score = 0.5 * image_score + 0.3 * caption_score + 0.2 * hashtag_score
         actions = {
@@ -85,7 +83,6 @@ async def analyze_post(request: AnalyzeRequest):
             "hide_hashtags": hashtag_score < 0.6,
             "blur_post": final_score < 0.65
         }
-
         return AnalyzeResponse(image_score=image_score, caption_score=caption_score, hashtag_score=hashtag_score,
                                final_score=final_score, actions=actions)
     except Exception as e:
