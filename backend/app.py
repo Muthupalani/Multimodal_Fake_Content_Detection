@@ -17,68 +17,54 @@ from torchvision.transforms import Compose, Resize, CenterCrop, Normalize, ToTen
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["chrome-extension://*"], allow_methods=["*"], allow_headers=["*"])
-
-# Load models once (your specs)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 clip_model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14").to(device)
 clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
-
 roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-large-mnli")
 roberta_model = AutoModelForSequenceClassification.from_pretrained("roberta-large-mnli").to(device)
-
 sentence_bert = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 clip_model_st = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)  # For img-text sim
 clip_processor_st = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-
-# Image preprocess for CLIP
 transform = Compose([
     Resize((224, 224)), CenterCrop(224), ToTensor(),
     Normalize(mean=[0.48145466, 0.4578275, 0.40821073], std=[0.26862954, 0.26130258, 0.27577711])
 ])
-
 class AnalyzeRequest(BaseModel):
     image_url: str
     caption: str
     hashtags: List[str]
-
 class AnalyzeResponse(BaseModel):
     image_score: float  # 0-1 real <0.7 fake
     caption_score: float  # 0-1 real <0.65 fake
     hashtag_score: float  # 0-1 relevant <0.6 fake
     final_score: float  # Weighted <0.65 blur all
     actions: dict
-
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_post(request: AnalyzeRequest):
     try:
         # 1. Image authenticity (CLIP: real vs AI-generated prompt)
         image = Image.open(io.BytesIO(requests.get(request.image_url).content))
         image_input = transform(image).unsqueeze(0).to(device)
-        
         real_prompt = "a real photograph taken by camera"
         ai_prompt = "an AI generated image"
         text_inputs = clip_processor(text=[real_prompt, ai_prompt], return_tensors="pt", padding=True).to(device)
-        
         with torch.no_grad():
             img_emb = clip_model.get_image_features(image_input)
             text_emb = clip_model.get_text_features(**text_inputs)
             probs = torch.softmax((img_emb @ text_emb.T)[0], dim=0)
             image_score = probs[0].item()  # Real prob [web:11][web:21]
-
         # 2. Caption misinformation (RoBERTa MNLI zero-shot: entail real vs contradict)
         inputs = roberta_tokenizer(f"{request.caption} This is real content.", "This is misleading or fake.", return_tensors="pt", truncation=True, padding=True).to(device)
         with torch.no_grad():
             logits = roberta_model(**inputs).logits
             probs = torch.softmax(logits, dim=1)
             caption_score = probs[2].item() if len(probs[0]) > 2 else probs[0][1].item()  # Entailment/real [web:12][web:23]
-
         # 3. Hashtag relevance (Sentence-BERT caption-hashtags + CLIP img-hashtags)
         if request.hashtags:
             # Text sim: caption vs joined hashtags
             caption_emb = sentence_bert.encode(request.caption)
             ht_emb = sentence_bert.encode(" ".join(request.hashtags))
             text_sim = np.dot(caption_emb, ht_emb) / (np.linalg.norm(caption_emb) * np.linalg.norm(ht_emb))
-            
             # Img-text sim
             ht_text = clip_processor_st(" ".join(request.hashtags), return_tensors="pt").to(device)
             with torch.no_grad():
