@@ -34,10 +34,10 @@ class AnalyzeRequest(BaseModel):
     caption: str
     hashtags: List[str]
 class AnalyzeResponse(BaseModel):
-    image_score: float  # 0-1 real <0.7 fake
-    caption_score: float  # 0-1 real <0.65 fake
-    hashtag_score: float  # 0-1 relevant <0.6 fake
-    final_score: float  # Weighted <0.65 blur all
+    image_score: float  
+    caption_score: float  
+    hashtag_score: float  
+    final_score: float  
     actions: dict
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_post(request: AnalyzeRequest):
@@ -59,11 +59,9 @@ async def analyze_post(request: AnalyzeRequest):
             probs = torch.softmax(logits, dim=1)
             caption_score = probs[2].item() if len(probs[0]) > 2 else probs[0][1].item() 
         if request.hashtags:
-            # Text sim: caption vs joined hashtags
             caption_emb = sentence_bert.encode(request.caption)
             ht_emb = sentence_bert.encode(" ".join(request.hashtags))
             text_sim = np.dot(caption_emb, ht_emb) / (np.linalg.norm(caption_emb) * np.linalg.norm(ht_emb))
-            # Img-text sim
             ht_text = clip_processor_st(" ".join(request.hashtags), return_tensors="pt").to(device)
             with torch.no_grad():
                 ht_emb_clip = clip_model_st.get_text_features(**ht_text)
@@ -73,7 +71,6 @@ async def analyze_post(request: AnalyzeRequest):
             hashtag_score = (text_sim + img_sim) / 2
         else:
             hashtag_score = 1.0
-        # Weighted final + actions
         final_score = 0.5 * image_score + 0.3 * caption_score + 0.2 * hashtag_score
         actions = {
             "blur_image": image_score < 0.7,
