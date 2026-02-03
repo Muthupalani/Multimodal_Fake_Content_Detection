@@ -57,8 +57,7 @@ async def analyze_post(request: AnalyzeRequest):
         with torch.no_grad():
             logits = roberta_model(**inputs).logits
             probs = torch.softmax(logits, dim=1)
-            caption_score = probs[2].item() if len(probs[0]) > 2 else probs[0][1].item()  # Entailment/real [web:12][web:23]
-        # 3. Hashtag relevance (Sentence-BERT caption-hashtags + CLIP img-hashtags)
+            caption_score = probs[2].item() if len(probs[0]) > 2 else probs[0][1].item() 
         if request.hashtags:
             # Text sim: caption vs joined hashtags
             caption_emb = sentence_bert.encode(request.caption)
