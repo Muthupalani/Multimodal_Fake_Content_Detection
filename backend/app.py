@@ -23,7 +23,7 @@ clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
 roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-large-mnli")
 roberta_model = AutoModelForSequenceClassification.from_pretrained("roberta-large-mnli").to(device)
 sentence_bert = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-clip_model_st = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)  # For img-text sim
+clip_model_st = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)  
 clip_processor_st = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 transform = Compose([
     Resize((224, 224)), CenterCrop(224), ToTensor(),
@@ -42,7 +42,7 @@ class AnalyzeResponse(BaseModel):
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_post(request: AnalyzeRequest):
     try:
-        # 1. Image authenticity (CLIP: real vs AI-generated prompt)
+
         image = Image.open(io.BytesIO(requests.get(request.image_url).content))
         image_input = transform(image).unsqueeze(0).to(device)
         real_prompt = "a real photograph taken by camera"
@@ -52,8 +52,7 @@ async def analyze_post(request: AnalyzeRequest):
             img_emb = clip_model.get_image_features(image_input)
             text_emb = clip_model.get_text_features(**text_inputs)
             probs = torch.softmax((img_emb @ text_emb.T)[0], dim=0)
-            image_score = probs[0].item()  # Real prob [web:11][web:21]
-        # 2. Caption misinformation (RoBERTa MNLI zero-shot: entail real vs contradict)
+            image_score = probs[0].item()  
         inputs = roberta_tokenizer(f"{request.caption} This is real content.", "This is misleading or fake.", return_tensors="pt", truncation=True, padding=True).to(device)
         with torch.no_grad():
             logits = roberta_model(**inputs).logits
