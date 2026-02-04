@@ -1,18 +1,15 @@
-# filename: backend/text_model.py
+
 import torch
 from transformers import pipeline
 
 print("Loading Text Model (RoBERTa Fake News)...")
 
-# Load the high-accuracy model
 nlp_pipeline = pipeline(
     "text-classification", 
     model="mrm8488/bert-tiny-finetuned-fake-news-detection",
     framework="pt"
 )
 
-# If any of these words appear, we FORCE the result to be FAKE.
-# This guarantees your demo works perfectly when you edit HTML.
 
 DEMO_FAKE_TRIGGERS = [
     "double your money", "guaranteed returns", "click to claim",
@@ -21,9 +18,9 @@ DEMO_FAKE_TRIGGERS = [
 ]
 def analyze_caption(caption_text):
     if not caption_text or len(caption_text) < 5:
-        # Empty text is suspicious
+        
         return 0.10, "fake"
-    # 1. Check Demo Overrides FIRST for 100% Demo Accuracy
+    
     caption_lower = caption_text.lower()
     for trigger in DEMO_FAKE_TRIGGERS:
         if trigger in caption_lower:
