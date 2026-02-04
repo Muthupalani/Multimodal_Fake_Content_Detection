@@ -42,7 +42,6 @@ class AnalyzeResponse(BaseModel):
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_post(request: AnalyzeRequest):
     try:
-
         image = Image.open(io.BytesIO(requests.get(request.image_url).content))
         image_input = transform(image).unsqueeze(0).to(device)
         real_prompt = "a real photograph taken by camera"

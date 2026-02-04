@@ -10,8 +10,10 @@ nlp_pipeline = pipeline(
     model="mrm8488/bert-tiny-finetuned-fake-news-detection",
     framework="pt"
 )
+
 # If any of these words appear, we FORCE the result to be FAKE.
 # This guarantees your demo works perfectly when you edit HTML.
+
 DEMO_FAKE_TRIGGERS = [
     "double your money", "guaranteed returns", "click to claim",
     "you won", "lottery winner", "restricted items", "illegal",
@@ -26,7 +28,7 @@ def analyze_caption(caption_text):
     for trigger in DEMO_FAKE_TRIGGERS:
         if trigger in caption_lower:
             print(f"[Text] Found trigger '{trigger}' -> Forcing FAKE")
-            return 0.99, "fake" # High confidence fake
+            return 0.99, "fake" 
     # 2. If no triggers, run the actual AI Model
     try:
         result = nlp_pipeline(caption_text[:512])
